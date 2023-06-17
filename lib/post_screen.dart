@@ -17,14 +17,14 @@ class _PostScreenState extends State<PostScreen>{
 
 
 List<PostModel> posts = [];
-final String postsURL = "https://jsonplaceholder.typicode.com/posts?_start=0&_limit=2";
+final String postsURL = "https://jsonplaceholder.typicode.com/posts?_start=0&_limit=20";
 
 
 
 Future<List<PostModel>> getallpost ()async{
 
   final res = await get(Uri.parse(postsURL));
-
+  posts.clear();
 
   print(res.body);
   var data  = jsonDecode(res.body.toString());
@@ -58,7 +58,7 @@ Future<List<PostModel>> getallpost ()async{
               future: getallpost(),
                 builder: (context,snapshot){
 
-                if (snapshot.hasData){
+                if (!snapshot.hasData){
                   return const Text('Loading');
                 }else{
                   return  ListView.builder(
@@ -66,7 +66,11 @@ Future<List<PostModel>> getallpost ()async{
                     itemBuilder: (BuildContext context,  index) {
                       return  Padding(
                           padding: const  EdgeInsets.only(left: 8.0,right: 8,top: 4,bottom: 4),
-                          child: Text(posts[index].id.toString()),
+                          child: ListTile(
+                            leading: Text(posts[index].id.toString()),
+                            title: Text(posts[index].title.toString(),style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                            subtitle: Text(posts[index].body.toString()),
+                          )
                       );
                     },
 
